@@ -20,5 +20,3 @@ while run:
             run = False
 
 pygame.quit()
-
-#new change
