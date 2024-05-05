@@ -1,24 +1,22 @@
-from sys import exit
 import pygame
+import constants as const
 
 pygame.init()
-screen = pygame.display.set_mode((800,400))
-pygame.display.set_caption('Runner')
+screen = pygame.display.set_mode((const.SCREEN_WIDTH,const.SCREEN_HEIGHT))
+pygame.display.set_caption("Tower Defense")
 clock = pygame.time.Clock()
-test_font = pygame.font.Font()
 
-sky_surface = pygame.image.load('graphics/Sky.png')
-ground_surface = pygame.image.load('graphics/ground.png')
+# sky_surface = pygame.image.load('graphics/Sky.png')
+# ground_surface = pygame.image.load('graphics/ground.png')
 
-while True:
+#game loop
+run = True
+while run:
+    clock.tick(const.FPS)
+
+    #event handler
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            pygame.quit()
-            exit()
-    screen.blit(sky_surface, (0,0))
-    screen.blit(ground_surface, (0,300))
-    pygame.display.update()
-    clock.tick(60)
+            run = False
 
-#test test
-# new test
+pygame.quit()
