@@ -3,6 +3,7 @@ import json
 import constants as const
 from enemy import Enemy
 from world import World
+
 pygame.init()
 screen = pygame.display.set_mode((const.SCREEN_WIDTH,const.SCREEN_HEIGHT))
 pygame.display.set_caption("Tower Defense")
@@ -15,27 +16,21 @@ enemy_image = pygame.image.load("graphics/snail1.png").convert_alpha()
 with open('graphicsNew/testMap.tmj') as file:
     world_data = json.load(file)
 
-waypoints = [
-    (100,100),
-    (400,200),
-    (400,100),
-    (200,300),
-]
-
 #load images
 #map
 map_image = pygame.image.load('graphicsNew/testMap.png')
 
+#create world
+world = World(world_data, map_image)
+world.process_data()
+
+print(world.waypoints)
 #create groups
 enemy_group = pygame.sprite.Group()
 
 #enemies
-enemyName = Enemy(waypoints, enemy_image)
+enemyName = Enemy(world.waypoints, enemy_image)
 enemy_group.add(enemyName)
-
-#world
-world = World(world_data, map_image)
-world.process_data()
 
 #game loop
 run = True
@@ -48,7 +43,7 @@ while run:
     world.draw(screen)
 
     #draw enemy path
-    pygame.draw.lines(screen, "grey0", False, waypoints)
+    pygame.draw.lines(screen, "grey0", False, world.waypoints)
     #update groups
     enemy_group.update()
 
