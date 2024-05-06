@@ -12,7 +12,7 @@ clock = pygame.time.Clock()
 enemy_image = pygame.image.load("graphics/snail1.png").convert_alpha()
 
 #load json data for level
-with open('graphicsNew/testMap..tmj') as file:
+with open('graphicsNew/testMap.tmj') as file:
     world_data = json.load(file)
 
 waypoints = [

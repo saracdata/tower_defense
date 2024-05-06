@@ -31,12 +31,12 @@
         {
          "draworder":"topdown",
          "id":2,
-         "name":"Object Layer 1",
+         "name":"waypoints",
          "objects":[
                 {
                  "height":0,
                  "id":1,
-                 "name":"waypoints",
+                 "name":"",
                  "polyline":[
                         {
                          "x":0,
