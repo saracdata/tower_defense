@@ -1,4 +1,5 @@
 import pygame
+import json
 import constants as const
 from enemy import Enemy
 from world import World
@@ -9,6 +10,10 @@ clock = pygame.time.Clock()
 
 #load imgs
 enemy_image = pygame.image.load("graphics/snail1.png").convert_alpha()
+
+#load json data for level
+with open('graphicsNew/testMap..tmj') as file:
+    world_data = json.load(file)
 
 waypoints = [
     (100,100),
@@ -29,7 +34,8 @@ enemyName = Enemy(waypoints, enemy_image)
 enemy_group.add(enemyName)
 
 #world
-world = World(map_image)
+world = World(world_data, map_image)
+world.process_data()
 
 #game loop
 run = True
