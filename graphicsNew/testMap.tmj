@@ -20,7 +20,7 @@
             10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10],
          "height":15,
          "id":1,
-         "name":"Tile Layer 1",
+         "name":"tilemap",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,

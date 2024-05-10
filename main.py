@@ -22,8 +22,19 @@ with open('graphicsNew/testMap.tmj') as file:
 def create_turret(mouse_pos):
     mouse_tile_x = mouse_pos[0] // const.Tile_size
     mouse_tile_y = mouse_pos[1] // const.Tile_size
-    turret = Turret(cursor_turret, mouse_tile_x, mouse_tile_y)
-    turret_group.add(turret)
+    #calculate the sequential number of the tile
+    mouse_tile_num = (mouse_tile_y * const.Cols) + mouse_tile_x
+    #check if that tile is grass
+    if world.tile_map[mouse_tile_num] == 10:
+        #check that there isn't already a turret there
+        space_is_free = True
+        for turret in turret_group:
+            if (mouse_tile_x, mouse_tile_y) == (turret.tile_x, turret.tile_y):
+                space_is_free = False
+        #if it is a free space then create turret
+        if space_is_free == True:
+            new_turret = Turret(cursor_turret, mouse_tile_x, mouse_tile_y)
+            turret_group.add(new_turret)
 
 #load images
 #map
