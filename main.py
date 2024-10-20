@@ -6,6 +6,7 @@ from enemy import Enemy
 from world import World
 from turret import Turret
 from button import Button
+from pygame.math import Vector2
 
 pygame.init()
 
@@ -33,6 +34,11 @@ cursor_turret = pygame.image.load('assets/images/turrets/cursor_turret.png').con
 buy_turret_image = pygame.image.load('assets/images/buttons/buy_turret.png').convert_alpha()
 cancel_image = pygame.image.load('assets/images/buttons/cancel.png').convert_alpha()
 
+#start game button
+start_button_image = pygame.image.load('assets/images/buttons/begin.png').convert_alpha()
+#restart game button
+restart_button_image = pygame.image.load('assets/images/buttons/restart.png').convert_alpha()
+
 #load json data for level
 with open('graphicsNew/testMap.tmj') as file:
     world_data = json.load(file)
@@ -51,7 +57,7 @@ def create_turret(mouse_pos):
                 space_is_free = False
         #if it is a free space then create turret
         if space_is_free == True:
-            new_turret = Turret(turret_sheet, mouse_tile_x, mouse_tile_y)
+            new_turret = Turret(turret_sheet, mouse_tile_x, mouse_tile_y, Vector2(mouse_pos[0], mouse_pos[1]))
             turret_group.add(new_turret)
 def select_turret(mouse_pos):
     mouse_tile_x = mouse_pos[0] // const.Tile_size
@@ -74,12 +80,16 @@ enemy_group = pygame.sprite.Group()
 turret_group = pygame.sprite.Group()
 
 #enemies
-enemyName = Enemy(world.waypoints, enemy_image)
+enemyName = Enemy(world.waypoints, enemy_image, (100, 100, 50, 10, 100))
 enemy_group.add(enemyName)
 
 #create buttons
 turret_button = Button(const.SCREEN_WIDTH + 30, 120, buy_turret_image, True)
 cancel_button = Button(const.SCREEN_WIDTH + 50, 180, cancel_image, True)
+start_button = Button(const.SCREEN_WIDTH + 30, 0, start_button_image, True)
+restart_button = Button(const.SCREEN_WIDTH + 30, 50, restart_button_image, True)
+
+game_started = False
 
 #game loop
 run = True
@@ -90,14 +100,21 @@ while run:
     # UPDATING SECTION
     #############################
     #update groups
-    enemy_group.update()
+    if game_started:
+        enemy_group.update()
     turret_group.update()
 
     #highlight selected turret
     if selected_turret:
         selected_turret.selected = True
 
-    #############################
+
+    for turret in turret_group:
+        for enemy in enemy_group:
+            if turret.in_range(enemy):
+                turret.attack(enemy)
+                print(f"Enemy HP: {enemy.hp}")
+
     # DRAWING SECTION
     #############################
 
@@ -106,8 +123,16 @@ while run:
     #draw level
     world.draw(screen)
 
+    if not game_started:
+        if start_button.draw(screen):
+            game_started = True
+
     #draw groups
-    enemy_group.draw(screen)
+    if game_started:
+        enemy_group.draw(screen)
+        for enemy in enemy_group:
+            enemy.draw_health(screen)
+
     for turret in turret_group:
         turret.draw(screen)
 
@@ -115,6 +140,7 @@ while run:
     #button for placing turrets
     if turret_button.draw(screen):
         placing_turrets = True
+
     #if placing turrets then show the cancel button as well
     if placing_turrets == True:
         #show cursor turret

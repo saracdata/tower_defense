@@ -1,9 +1,12 @@
 import pygame as pg
 from pygame.math import Vector2
 import math
-class Enemy(pg.sprite.Sprite):
-    def __init__(self, waypoints, image):
+from health import HealthBar
+class Enemy(pg.sprite.Sprite, HealthBar):
+    def __init__(self, waypoints, image, healthbar_params):
         pg.sprite.Sprite.__init__(self)
+        HealthBar.__init__(self, *healthbar_params)
+
         self.waypoints = waypoints
         self.pos = Vector2(self.waypoints[0])
         self.target_waypoint = 1
@@ -14,10 +17,12 @@ class Enemy(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
         self.speed = 2
+        self.hp = healthbar_params[4]
 
     def update(self):
         self.move()
         self.rotate()
+        self.check_health()
 
     def move(self):
         if self.target_waypoint < len(self.waypoints):
@@ -47,3 +52,12 @@ class Enemy(pg.sprite.Sprite):
         self.image = pg.transform.rotate(self.original_img, self.angle)
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
+
+    def draw_health(self, surface):
+        #draw health bar, making it follow the enemy
+        self.x, self.y = self.pos.x - self.w // 2, self.pos.y - 40 #adjust position relative to enemy
+        self.draw(surface) # draw healthbar
+
+    def check_health(self):
+        if self.hp <= 0:
+            self.kill()

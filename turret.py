@@ -1,17 +1,20 @@
 import pygame as pg
 import constants as c
 class Turret(pg.sprite.Sprite):
-    def __init__(self, sprite_sheet, tile_x, tile_y):
+    def __init__(self, sprite_sheet, tile_x, tile_y, pos):
         pg.sprite.Sprite.__init__(self)
 
         self.range = 90
         self.cooldown = 1500
         self.last_shot = pg.time.get_ticks()
         self.selected = False
+        self.damage = 1
+        self.pos = pos
 
         #position var
         self.tile_x = tile_x
         self.tile_y = tile_y
+
         #calculate center coordinates
         self.x = (self.tile_x+0.5) * c.Tile_size
         self.y = (self.tile_y+0.5) * c.Tile_size
@@ -26,7 +29,7 @@ class Turret(pg.sprite.Sprite):
         #update image
         self.image = self.animation_list[self.frame_index]
         self.rect = self.image.get_rect()
-        self.rect.center = (self.x , self.y)
+        self.rect.center = (self.x, self.y)
 
         #create transparent circle showing range
         self.range_image = pg.Surface((self.range * 2, self.range * 2))
@@ -65,3 +68,11 @@ class Turret(pg.sprite.Sprite):
         surface.blit(self.image,self.rect)
         if self.selected:
             surface.blit(self.range_image, self.range_rect)
+
+    def attack(self, enemy):
+        if self.in_range(enemy):
+            enemy.hp -= self.damage
+
+    def in_range(self, enemy):
+        distance = self.pos.distance_to(enemy.pos)
+        return distance <= self.range
