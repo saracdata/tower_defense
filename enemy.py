@@ -17,7 +17,8 @@ class Enemy(pg.sprite.Sprite, HealthBar):
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
         self.speed = 2
-        self.hp = healthbar_params[4]
+        self.max_hp = healthbar_params[4]
+        self.hp = self.max_hp
 
     def update(self):
         self.move()

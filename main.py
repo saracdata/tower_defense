@@ -59,7 +59,7 @@ def create_turret(mouse_pos):
         if space_is_free == True:
             new_turret = Turret(turret_sheet, mouse_tile_x, mouse_tile_y, Vector2(mouse_pos[0], mouse_pos[1]))
             turret_group.add(new_turret)
-def select_turret(mouse_pos):
+def select_turret(mouse_pos): #not a pure function, because it depends on turret_group
     mouse_tile_x = mouse_pos[0] // const.Tile_size
     mouse_tile_y = mouse_pos[1] // const.Tile_size
     for turret in turret_group:
@@ -87,9 +87,23 @@ enemy_group.add(enemyName)
 turret_button = Button(const.SCREEN_WIDTH + 30, 120, buy_turret_image, True)
 cancel_button = Button(const.SCREEN_WIDTH + 50, 180, cancel_image, True)
 start_button = Button(const.SCREEN_WIDTH + 30, 0, start_button_image, True)
-restart_button = Button(const.SCREEN_WIDTH + 30, 50, restart_button_image, True)
+restart_button = Button(const.SCREEN_WIDTH + 30, 0, restart_button_image, True)
 
 game_started = False
+restart_button_visible = False
+
+def restart_round(): #void function, declare inside function, it is local variable - laxel scope of the function
+    #enemy_group - none local, is declared outside of the function, it does stay modified
+    enemy_group.empty()
+    new_enemy = Enemy(world.waypoints, enemy_image, (100, 100, 50, 10, 100))
+    enemy_group.add(new_enemy)
+
+
+#enemy_group = restart_round(enemy_groupfunction(world.waypoints,enemy_image))
+
+#todo: shooting animation
+
+
 
 #game loop
 run = True
@@ -102,7 +116,7 @@ while run:
     #update groups
     if game_started:
         enemy_group.update()
-    turret_group.update()
+    turret_group.update(game_started, enemy_group)
 
     #highlight selected turret
     if selected_turret:
@@ -126,6 +140,11 @@ while run:
     if not game_started:
         if start_button.draw(screen):
             game_started = True
+            restart_button_visible = True
+
+    if restart_button_visible:
+        if restart_button.draw(screen):
+            restart_round()
 
     #draw groups
     if game_started:

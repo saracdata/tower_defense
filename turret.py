@@ -5,10 +5,10 @@ class Turret(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self)
 
         self.range = 90
-        self.cooldown = 1500
+        self.cooldown = 500
         self.last_shot = pg.time.get_ticks()
         self.selected = False
-        self.damage = 1
+        self.damage = 0.1
         self.pos = pos
 
         #position var
@@ -40,6 +40,8 @@ class Turret(pg.sprite.Sprite):
         self.range_rect = self.range_image.get_rect()
         self.range_rect.center = self.rect.center
 
+
+#put other functions as private in other language, each function that start with _
     def load_images(self):
         #extract img from sprite sheet
         size = self.sprite_sheet.get_height()
@@ -49,10 +51,27 @@ class Turret(pg.sprite.Sprite):
             animation_list.append(temp_img)
         return animation_list
 
-    def update(self):
-        if pg.time.get_ticks() - self.last_shot > self.cooldown:
-            self.play_animation()
+    def update(self, game_started, enemy_group):
+        if game_started:
+            enemy_in_range = False
+
+            for enemy in enemy_group:
+                if self.in_range(enemy):
+                    enemy_in_range = True
+                    if pg.time.get_ticks() - self.last_shot > self.cooldown:
+                        self.attack(enemy)
+                        self.play_animation()
+                    break # Exit after the first enemy found in range
+            if not enemy_in_range:
+                self.frame_index = 0
+                self.image = self.animation_list[self.frame_index]
+                self.is_animating = False
+
+
     def play_animation(self):
+        #only animate if we havn't finished the cycle
+        if not self.is_animating:
+            self.is_animating = True
         #update image
         self.image = self.animation_list[self.frame_index]
         #check if enough time has passed since last update
@@ -63,9 +82,10 @@ class Turret(pg.sprite.Sprite):
                 self.frame_index = 0
                 #record completed time and clear target to start cd
                 self.last_shot = pg.time.get_ticks()
+                self.is_animating = False
 
     def draw(self, surface):
-        surface.blit(self.image,self.rect)
+        surface.blit(self.image, self.rect)
         if self.selected:
             surface.blit(self.range_image, self.range_rect)
 
@@ -76,3 +96,8 @@ class Turret(pg.sprite.Sprite):
     def in_range(self, enemy):
         distance = self.pos.distance_to(enemy.pos)
         return distance <= self.range
+
+
+
+
+
