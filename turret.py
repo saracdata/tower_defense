@@ -44,7 +44,8 @@ class Turret(pg.sprite.Sprite):
 
         #precompute rotations and add alignment variables
         self.rotated_images = self.precompute_rotated_images()
-
+        self.current_angle = 0
+        self.is_aligned = False
 
 
 #put other functions as private in other language, each function that start with _
@@ -83,15 +84,25 @@ class Turret(pg.sprite.Sprite):
                 break # Exit after the first enemy found in range
 
         if closest_enemy:
-            self.target_angle = int(round(angle_to_enemy))
+            target_enemy_angle = int(round(angle_to_enemy / 15) * 15) % 360
+            self.align_to_target_angle(target_enemy_angle)
 
-            if pg.time.get_ticks() - self.last_shot > self.cooldown:
+            if self.is_aligned \
+                    and (pg.time.get_ticks() - self.last_shot) > self.cooldown:
                 self.attack(closest_enemy)
                 self.play_animation(angle_to_enemy)
 
         else:
-            self.frame_index = 0
-            self.image = self.animation_list[self.frame_index]
+            self.reset_animation()
+
+
+    def align_to_target_angle(self, target_enemy_angle):
+
+        self.current_angle = target_enemy_angle
+        self.is_aligned = True
+
+        self.image = self.get_rotated_image(self.current_angle, self.frame_index)
+
 
 
     def play_animation(self, angle_to_enemy):
@@ -108,7 +119,9 @@ class Turret(pg.sprite.Sprite):
             self.frame_index = 0
             self.last_shot = pg.time.get_ticks()
 
-
+    def reset_animation(self):
+        self.frame_index = 0
+        self.image = self.animation_list[self.frame_index]
 
     def draw(self, surface):
         surface.blit(self.image, self.rect)
