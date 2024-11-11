@@ -3,7 +3,7 @@ from pygame.math import Vector2
 import math
 from health import HealthBar
 class Enemy(pg.sprite.Sprite, HealthBar):
-    def __init__(self, waypoints, image, healthbar_params):
+    def __init__(self, waypoints, image, healthbar_params, angle_offset=0):
         pg.sprite.Sprite.__init__(self)
         HealthBar.__init__(self, *healthbar_params)
 
@@ -19,6 +19,7 @@ class Enemy(pg.sprite.Sprite, HealthBar):
         self.speed = 2
         self.max_hp = healthbar_params[4]
         self.hp = self.max_hp
+        self.angle_offset = angle_offset
 
 
     def update(self):
@@ -50,8 +51,7 @@ class Enemy(pg.sprite.Sprite, HealthBar):
         #calc angle using dist
         self.angle = math.degrees(math.atan2(-dist[1], dist[0]))
 
-        angle_offset = 90
-        adjusted_angle = self.angle + angle_offset
+        adjusted_angle = self.angle + self.angle_offset
 
         #rotate img and update rect
         self.image = pg.transform.rotate(self.original_img, adjusted_angle)
