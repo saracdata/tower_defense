@@ -13,7 +13,9 @@ from level_state_global import *
 import copy
 from game_level_config_load import load_level_config
 from enemy_manager import EnemyManager
+import logging
 
+logging.basicConfig(level=logging.DEBUG)
 
 pygame.init()
 

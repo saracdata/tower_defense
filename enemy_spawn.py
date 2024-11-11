@@ -1,4 +1,5 @@
 import pygame
+import logging
 from enemy import Enemy
 
 class EnemySpawner:
@@ -25,15 +26,22 @@ class EnemySpawner:
         """Spawn enemies at intervals."""
         current_time = pygame.time.get_ticks()
         if self.enemy_queue and current_time - self.last_spawn_time >= self.spawn_delay:
-            enemy_type = self.enemy_queue.pop(0)
-            enemy_image = self.enemy_images[enemy_type]
-            spawn_point = self.spawn_points[0]
-            new_enemy = Enemy(self.waypoints, enemy_image, spawn_point, self.angle_offset)
-            self.enemy_manager.add_enemy(new_enemy)
-            self.last_spawn_time = current_time
+            if not self.enemy_queue:
+                logging.warning("Enemy queue is empty. No enemies to spawn.")
+                return
+            try:
+                enemy_type = self.enemy_queue.pop(0)
+                enemy_image = self.enemy_images[enemy_type]
+                spawn_point = self.spawn_points[0]
+                new_enemy = Enemy(self.waypoints, enemy_image, spawn_point, self.angle_offset)
+                self.enemy_manager.add_enemy(new_enemy)
+                self.last_spawn_time = current_time
+                logging.debug(f"Enemy spawned, remaining queue length: {len(self.enemy_queue)}")
+            except Exception as e:
+                logging.error(f"Error while spawning enemy: {e}")
 
     def restart(self):
         """Clear and reset enemy spawning for a new round."""
         self.enemy_queue = self._create_enemy_queue()
         self.last_spawn_time = pygame.time.get_ticks()
-
+        logging.info("Enemy spawner restarted.")
