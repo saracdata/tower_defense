@@ -2,14 +2,14 @@ import pygame
 from enemy import Enemy
 
 class EnemySpawner:
-    def __init__(self, game_level, enemy_images, waypoints, enemy_group):
+    def __init__(self, game_level, enemy_images, waypoints, enemy_manager):
         self.game_level = game_level
         self.enemy_images = enemy_images
         self.waypoints = waypoints
         self.spawn_delay = 1000  # Time in milliseconds between spawns
         self.last_spawn_time = pygame.time.get_ticks()  # Track the last spawn time
         self.enemy_queue = self._create_enemy_queue()  # Queue of enemies to spawn
-        self.enemy_group = enemy_group  # Group to store all spawned enemies
+        self.enemy_manager = enemy_manager  # Group to store all spawned enemies
         self.spawn_points = game_level.map.spawn_points
         self.angle_offset = game_level.map.angle_offset
 
@@ -29,15 +29,11 @@ class EnemySpawner:
             enemy_image = self.enemy_images[enemy_type]
             spawn_point = self.spawn_points[0]
             new_enemy = Enemy(self.waypoints, enemy_image, spawn_point, self.angle_offset)
-            self.enemy_group.add(new_enemy)
+            self.enemy_manager.add_enemy(new_enemy)
             self.last_spawn_time = current_time
 
     def restart(self):
         """Clear and reset enemy spawning for a new round."""
-        self.enemy_group.empty()
         self.enemy_queue = self._create_enemy_queue()
         self.last_spawn_time = pygame.time.get_ticks()
 
-# To be called in main.py for instantiation and updates
-def spawn_enemies(game_level, enemy_images, waypoints, enemy_group):
-    return EnemySpawner(game_level, enemy_images, waypoints, enemy_group)

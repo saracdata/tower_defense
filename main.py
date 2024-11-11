@@ -12,7 +12,8 @@ from level_renderer import LevelRender
 from level_state_global import *
 import copy
 from game_level_config_load import load_level_config
-from enemy_spawn import spawn_enemies
+from enemy_manager import EnemyManager
+
 
 pygame.init()
 
@@ -101,10 +102,6 @@ restart_button = Button(const.SCREEN_WIDTH + 30, 0, restart_button_image, True)
 game_started = False
 restart_button_visible = False
 
-def restart_round(): #void function, declare inside function, it is local variable - laxel scope of the function
-    #enemy_group - none local, is declared outside of the function, it does stay modified
-    enemy_spawner.restart()
-
 
 #enemy_group = restart_round(enemy_groupfunction(world.waypoints,enemy_image))
 
@@ -117,8 +114,7 @@ level_render = LevelRender()
 
 set_starting_gold(current_level)
 
-enemy_spawner = spawn_enemies(current_level, enemy_images, world.waypoints, enemy_group)
-
+enemy_manager = EnemyManager(current_level, enemy_images, world.waypoints)
 
 #game loop
 run = True
@@ -130,10 +126,9 @@ while run:
     #############################
     #update groups
     if game_started:
-        enemy_spawner.update()
-        enemy_group.update()
+        enemy_manager.update_enemies()
 
-    turret_group.update(game_started, enemy_group)
+    turret_group.update(game_started, enemy_manager.enemy_group)
 
 
     #highlight selected turret
@@ -142,7 +137,7 @@ while run:
 
 
     for turret in turret_group:
-        for enemy in enemy_group:
+        for enemy in enemy_manager.enemy_group:
             if turret.in_range(enemy):
                 turret.attack(enemy)
                 print(f"Enemy HP: {enemy.hp}")
@@ -164,13 +159,11 @@ while run:
 
     if restart_button_visible:
         if restart_button.draw(screen):
-            restart_round()
+            enemy_manager.restart()
 
     #draw groups
     if game_started:
-        enemy_group.draw(screen)
-        for enemy in enemy_group:
-            enemy.draw_health(screen)
+        enemy_manager.draw_enemies(screen)
 
     for turret in turret_group:
         turret.draw(screen)
