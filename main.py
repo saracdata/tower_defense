@@ -98,12 +98,9 @@ start_button = Button(const.SCREEN_WIDTH + 30, 0, start_button_image, True)
 restart_button = Button(const.SCREEN_WIDTH + 30, 0, restart_button_image, True)
 
 
-
 game_started = False
 restart_button_visible = False
 
-
-#enemy_group = restart_round(enemy_groupfunction(world.waypoints,enemy_image))
 
 level_name = "level_1"
 test_level = load_level_config(level_name)
