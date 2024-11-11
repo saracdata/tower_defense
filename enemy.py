@@ -20,6 +20,7 @@ class Enemy(pg.sprite.Sprite, HealthBar):
         self.max_hp = healthbar_params[4]
         self.hp = self.max_hp
 
+
     def update(self):
         self.move()
         self.rotate()
@@ -49,8 +50,11 @@ class Enemy(pg.sprite.Sprite, HealthBar):
         #calc angle using dist
         self.angle = math.degrees(math.atan2(-dist[1], dist[0]))
 
+        angle_offset = 90
+        adjusted_angle = self.angle + angle_offset
+
         #rotate img and update rect
-        self.image = pg.transform.rotate(self.original_img, self.angle)
+        self.image = pg.transform.rotate(self.original_img, adjusted_angle)
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
 
