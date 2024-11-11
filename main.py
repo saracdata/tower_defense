@@ -7,6 +7,9 @@ from world import World
 from turret import Turret
 from button import Button
 from pygame.math import Vector2
+from design import GameLevel, EnemyType, TurretType, MapSource, ExtraEffectType
+from level_renderer import LevelRender
+from level_state import LevelState
 
 pygame.init()
 
@@ -43,7 +46,8 @@ restart_button_image = pygame.image.load('assets/images/buttons/restart.png').co
 with open('graphicsNew/testMap.tmj') as file:
     world_data = json.load(file)
 
-def create_turret(mouse_pos):
+
+def create_turret(mouse_pos, game_level):
     mouse_tile_x = mouse_pos[0] // const.Tile_size
     mouse_tile_y = mouse_pos[1] // const.Tile_size
     #calculate the sequential number of the tile
@@ -57,8 +61,10 @@ def create_turret(mouse_pos):
                 space_is_free = False
         #if it is a free space then create turret
         if space_is_free == True:
-            new_turret = Turret(turret_sheet, mouse_tile_x, mouse_tile_y, Vector2(mouse_pos[0], mouse_pos[1]))
-            turret_group.add(new_turret)
+            new_turret = Turret(turret_sheet, mouse_tile_x, mouse_tile_y, Vector2(mouse_pos[0], mouse_pos[1]), game_level)
+            if new_turret.place_turret():
+                turret_group.add(new_turret)
+
 def select_turret(mouse_pos): #not a pure function, because it depends on turret_group
     mouse_tile_x = mouse_pos[0] // const.Tile_size
     mouse_tile_y = mouse_pos[1] // const.Tile_size
@@ -103,8 +109,34 @@ def restart_round(): #void function, declare inside function, it is local variab
 
 #enemy_group = restart_round(enemy_groupfunction(world.waypoints,enemy_image))
 
-#todo: shooting animation
+test_level = GameLevel(
+    "level_1",
+    1000,
+    {
+        EnemyType.RED: 2,
+        EnemyType.BLUE: 1,
 
+     },
+    [
+        TurretType.RED,
+        TurretType.BLUE,
+
+    ],
+    MapSource('graphicsNew/testMap.png'),
+    [ExtraEffectType.EARTHQUAKE, ExtraEffectType.TSUNAMI],
+
+)
+
+
+#level_render = LevelRender(test_level)
+
+level_render = LevelRender()
+
+# dont_have_class_use_dict = {'num1': 1, 'num2': level_render.render_level}
+# dont_have_class_use_dict.copy(13,)
+
+
+#serialization and de-serialization .py -> .json, put configurable things that enables it to be good for reshuffling
 
 
 #game loop
@@ -139,6 +171,8 @@ while run:
 
     #draw level
     world.draw(screen)
+
+    level_render.render_level(test_level, screen)
 
     if not game_started:
         if start_button.draw(screen):
@@ -188,7 +222,7 @@ while run:
                 selected_turret = None
                 clear_selection()
                 if placing_turrets == True:
-                    create_turret(mouse_pos)
+                    create_turret(mouse_pos, test_level)
                 else:
                     selected_turret = select_turret(mouse_pos)
 
