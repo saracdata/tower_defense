@@ -103,9 +103,7 @@ restart_button_visible = False
 
 def restart_round(): #void function, declare inside function, it is local variable - laxel scope of the function
     #enemy_group - none local, is declared outside of the function, it does stay modified
-    enemy_group.empty()
-    spawn_enemies(current_level, world.waypoints, enemy_group, enemy_images)
-
+    enemy_spawner.restart()
 
 
 #enemy_group = restart_round(enemy_groupfunction(world.waypoints,enemy_image))
@@ -119,7 +117,7 @@ level_render = LevelRender()
 
 set_starting_gold(current_level)
 
-spawn_enemies(current_level, world.waypoints, enemy_group, enemy_images)
+enemy_spawner = spawn_enemies(current_level, enemy_images, world.waypoints, enemy_group)
 
 
 #game loop
@@ -132,7 +130,9 @@ while run:
     #############################
     #update groups
     if game_started:
+        enemy_spawner.update()
         enemy_group.update()
+
     turret_group.update(game_started, enemy_group)
 
 
