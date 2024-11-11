@@ -28,21 +28,14 @@ selected_turret = None
 
 #load imgs
 enemy_image = pygame.image.load("graphics/player_stand.png").convert_alpha()
-#load images
-#map
 map_image = pygame.image.load('graphicsNew/testMap.png')
-#turret spreadsheet
 turret_sheet = pygame.image.load('assets/images/turrets/turret_1.png').convert_alpha()
-#inividual turret image for mouse cursor
 cursor_turret = pygame.image.load('assets/images/turrets/cursor_turret.png').convert_alpha()
-#buttons
 buy_turret_image = pygame.image.load('assets/images/buttons/buy_turret.png').convert_alpha()
 cancel_image = pygame.image.load('assets/images/buttons/cancel.png').convert_alpha()
-
-#start game button
 start_button_image = pygame.image.load('assets/images/buttons/begin.png').convert_alpha()
-#restart game button
 restart_button_image = pygame.image.load('assets/images/buttons/restart.png').convert_alpha()
+
 
 #load json data for level
 with open('graphicsNew/testMap.tmj') as file:
