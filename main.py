@@ -47,13 +47,16 @@ with open('graphicsNew/testMap.tmj') as file:
     world_data = json.load(file)
 
 
-def create_turret(mouse_pos, game_level):
+def create_turret(mouse_pos):
     mouse_tile_x = mouse_pos[0] // const.Tile_size
     mouse_tile_y = mouse_pos[1] // const.Tile_size
     #calculate the sequential number of the tile
     mouse_tile_num = (mouse_tile_y * const.Cols) + mouse_tile_x
+
+    new_turret = Turret(turret_sheet, mouse_tile_x, mouse_tile_y, Vector2(mouse_pos[0], mouse_pos[1]))
+
     #check if that tile is grass
-    if world.tile_map[mouse_tile_num] == 10:
+    if world.tile_map[mouse_tile_num] == 10 and level_state.can_afford(new_turret.cost):
         #check that there isn't already a turret there
         space_is_free = True
         for turret in turret_group:
@@ -61,9 +64,8 @@ def create_turret(mouse_pos, game_level):
                 space_is_free = False
         #if it is a free space then create turret
         if space_is_free == True:
-            new_turret = Turret(turret_sheet, mouse_tile_x, mouse_tile_y, Vector2(mouse_pos[0], mouse_pos[1]), game_level)
-            if new_turret.place_turret():
-                turret_group.add(new_turret)
+            turret_group.add(new_turret)
+            level_state.deduct_gold(new_turret.cost)
 
 def select_turret(mouse_pos): #not a pure function, because it depends on turret_group
     mouse_tile_x = mouse_pos[0] // const.Tile_size
@@ -127,6 +129,7 @@ test_level = GameLevel(
 
 )
 
+level_state = LevelState(test_level.gold_balance)
 
 #level_render = LevelRender(test_level)
 
@@ -222,7 +225,7 @@ while run:
                 selected_turret = None
                 clear_selection()
                 if placing_turrets == True:
-                    create_turret(mouse_pos, test_level)
+                    create_turret(mouse_pos)
                 else:
                     selected_turret = select_turret(mouse_pos)
 

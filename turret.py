@@ -3,7 +3,7 @@ import pygame as pg
 import constants as c
 
 class Turret(pg.sprite.Sprite):
-    def __init__(self, sprite_sheet, tile_x, tile_y, pos, game_level):
+    def __init__(self, sprite_sheet, tile_x, tile_y, pos):
         pg.sprite.Sprite.__init__(self)
 
         self.range = 90
@@ -13,7 +13,6 @@ class Turret(pg.sprite.Sprite):
         self.damage = 0.1
         self.pos = pos
         self.cost = 100
-        self.game_level = game_level
 
         #position var
         self.tile_x = tile_x
@@ -136,13 +135,7 @@ class Turret(pg.sprite.Sprite):
         distance = self.pos.distance_to(enemy.pos)
         return distance <= self.range
 
-    def place_turret(self):
-        if self.game_level.gold_balance >= self.cost:
-            self.game_level.gold_balance -= self.cost
 
-            return True
-        else:
-            return False
 
 
 
