@@ -8,6 +8,7 @@
     },
     "turrets": ["RED", "BLUE"],
     "map_source": "graphicsNew/testMap.png",
+    "spawn_points": [[100, 100, 50, 10, 100]],
     "extra_effects": ["EARTHQUAKE", "TSUNAMI"]
   },
   "level_2": {
@@ -18,7 +19,8 @@
       "BLUE": 2
     },
     "turrets": ["RED", "BLUE"],
-    "map_source": "graphicsNew/level2Map.png",
+    "map_source": "graphicsNew/testMap.png",
+    "spawn_points": [[100, 100, 50, 10, 100]],
     "extra_effects": ["TSUNAMI"]
   }
 }

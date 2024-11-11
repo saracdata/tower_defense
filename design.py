@@ -15,8 +15,9 @@ class TurretType(Enum):
 
 
 class MapSource:
-    def __init__(self, filename: str):
+    def __init__(self, filename: str, spawn_points: List[tuple]):
         self.filename = filename
+        self.spawn_points = spawn_points
 
 
 # class ExtraEffectType(Enum):

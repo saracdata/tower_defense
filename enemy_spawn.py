@@ -10,6 +10,7 @@ class EnemySpawner:
         self.last_spawn_time = pygame.time.get_ticks()  # Track the last spawn time
         self.enemy_queue = self._create_enemy_queue()  # Queue of enemies to spawn
         self.enemy_group = enemy_group  # Group to store all spawned enemies
+        self.spawn_points = game_level.map.spawn_points
 
     def _create_enemy_queue(self):
         """Prepare the enemy queue based on game_level configuration."""
@@ -25,7 +26,8 @@ class EnemySpawner:
         if self.enemy_queue and current_time - self.last_spawn_time >= self.spawn_delay:
             enemy_type = self.enemy_queue.pop(0)
             enemy_image = self.enemy_images[enemy_type]
-            new_enemy = Enemy(self.waypoints, enemy_image, (100, 100, 50, 10, 100))
+            spawn_point = self.spawn_points[0]
+            new_enemy = Enemy(self.waypoints, enemy_image, spawn_point)
             self.enemy_group.add(new_enemy)
             self.last_spawn_time = current_time
 
