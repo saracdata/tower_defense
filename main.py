@@ -12,6 +12,7 @@ from level_renderer import LevelRender
 from level_state_global import *
 import copy
 from game_level_config_load import load_level_config
+from enemy_spawn import spawn_enemies
 
 pygame.init()
 
@@ -26,8 +27,13 @@ clock = pygame.time.Clock()
 placing_turrets = False
 selected_turret = None
 
-#load imgs
-enemy_image = pygame.image.load("graphics/player_stand.png").convert_alpha()
+enemy_images = {
+    EnemyType.RED: pygame.image.load("graphics/player_stand.png").convert_alpha(),
+    EnemyType.GREEN: pygame.image.load("graphics/Fly1.png").convert_alpha(),
+    EnemyType.BLUE: pygame.image.load("graphics/snail1.png").convert_alpha(),
+
+}
+
 map_image = pygame.image.load('graphicsNew/testMap.png')
 turret_sheet = pygame.image.load('assets/images/turrets/turret_1.png').convert_alpha()
 cursor_turret = pygame.image.load('assets/images/turrets/cursor_turret.png').convert_alpha()
@@ -82,9 +88,7 @@ print(world.waypoints)
 enemy_group = pygame.sprite.Group()
 turret_group = pygame.sprite.Group()
 
-#enemies
-enemyName = Enemy(world.waypoints, enemy_image, (100, 100, 50, 10, 100))
-enemy_group.add(enemyName)
+
 
 #create buttons
 turret_button = Button(const.SCREEN_WIDTH + 30, 120, buy_turret_image, True)
@@ -100,8 +104,8 @@ restart_button_visible = False
 def restart_round(): #void function, declare inside function, it is local variable - laxel scope of the function
     #enemy_group - none local, is declared outside of the function, it does stay modified
     enemy_group.empty()
-    new_enemy = Enemy(world.waypoints, enemy_image, (100, 100, 50, 10, 100))
-    enemy_group.add(new_enemy)
+    spawn_enemies(current_level, world.waypoints, enemy_group, enemy_images)
+
 
 
 #enemy_group = restart_round(enemy_groupfunction(world.waypoints,enemy_image))
@@ -115,6 +119,7 @@ level_render = LevelRender()
 
 set_starting_gold(current_level)
 
+spawn_enemies(current_level, world.waypoints, enemy_group, enemy_images)
 
 
 #game loop
