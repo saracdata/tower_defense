@@ -7,7 +7,7 @@
       "BLUE": 1
     },
     "turrets": ["RED", "BLUE"],
-    "map_source": "graphicsNew/testMap.tmj",
+    "map_source": "GRASS",
     "spawn_points": [[100, 100, 50, 10, 100]],
     "angle_offset": 90,
     "extra_effects": ["EARTHQUAKE", "TSUNAMI"]
@@ -20,7 +20,7 @@
       "BLUE": 2
     },
     "turrets": ["RED", "BLUE"],
-    "map_source": "graphicsNew/testMap.tmj",
+    "map_source": "GRASS",
     "spawn_points": [[100, 100, 50, 10, 100]],
     "angle_offset": 90,
     "extra_effects": ["TSUNAMI"]

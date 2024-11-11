@@ -1,5 +1,5 @@
 import json
-from design import GameLevel, EnemyType, TurretType, MapSource, ExtraEffectType
+from design import GameLevel, EnemyType, TurretType, MapSource, ExtraEffectType, MapType
 
 
 # Function to load level configuration from a JSON file
@@ -14,8 +14,11 @@ def load_level_config(level_name):
         turrets = [getattr(TurretType, turret) for turret in level_data["turrets"]]
         extra_effects = [getattr(ExtraEffectType, effect) for effect in level_data["extra_effects"]]
 
+        map_type_str = level_data["map_source"]
+        map_type = MapType[map_type_str]
+
         map_source = MapSource(
-            level_data["map_source"],
+            map_type,
             level_data["spawn_points"],
             level_data["angle_offset"]
         )

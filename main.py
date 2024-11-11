@@ -35,7 +35,6 @@ enemy_images = {
 
 }
 
-map_image = pygame.image.load('graphicsNew/testMap.png')
 turret_sheet = pygame.image.load('assets/images/turrets/turret_1.png').convert_alpha()
 cursor_turret = pygame.image.load('assets/images/turrets/cursor_turret.png').convert_alpha()
 buy_turret_image = pygame.image.load('assets/images/buttons/buy_turret.png').convert_alpha()
@@ -50,7 +49,6 @@ start_button = Button(const.SCREEN_WIDTH + 30, 0, start_button_image, True)
 restart_button = Button(const.SCREEN_WIDTH + 30, 0, restart_button_image, True)
 
 
-
 level_name = "level_1"
 
 test_level = load_level_config(level_name)
@@ -61,12 +59,15 @@ level_render = LevelRender()
 
 set_starting_gold(current_level)
 
-map_file_path = current_level.map.filename
+world_data = current_level.map.load_map_data()
 
+map_image = current_level.map.load_graphics_image()
 
-#load json data for level
-with open(map_file_path) as file:
-    world_data = json.load(file)
+#create world
+world = World(world_data, map_image)
+world.process_data()
+
+print(world.waypoints)
 
 def create_turret(mouse_pos):
     mouse_tile_x = mouse_pos[0] // const.Tile_size
@@ -99,11 +100,7 @@ def clear_selection():
     for turret in turret_group:
         turret.selected = False
 
-#create world
-world = World(world_data, map_image)
-world.process_data()
 
-print(world.waypoints)
 #create groups
 enemy_group = pygame.sprite.Group()
 turret_group = pygame.sprite.Group()
