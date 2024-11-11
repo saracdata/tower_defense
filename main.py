@@ -43,10 +43,25 @@ cancel_image = pygame.image.load('assets/images/buttons/cancel.png').convert_alp
 start_button_image = pygame.image.load('assets/images/buttons/begin.png').convert_alpha()
 restart_button_image = pygame.image.load('assets/images/buttons/restart.png').convert_alpha()
 
+#create buttons
+turret_button = Button(const.SCREEN_WIDTH + 30, 120, buy_turret_image, True)
+cancel_button = Button(const.SCREEN_WIDTH + 50, 180, cancel_image, True)
+start_button = Button(const.SCREEN_WIDTH + 30, 0, start_button_image, True)
+restart_button = Button(const.SCREEN_WIDTH + 30, 0, restart_button_image, True)
 
 #load json data for level
 with open('graphicsNew/testMap.tmj') as file:
     world_data = json.load(file)
+
+level_name = "level_1"
+
+test_level = load_level_config(level_name)
+
+current_level = copy.deepcopy(test_level)
+
+level_render = LevelRender()
+
+set_starting_gold(current_level)
 
 
 def create_turret(mouse_pos):
@@ -89,27 +104,8 @@ print(world.waypoints)
 enemy_group = pygame.sprite.Group()
 turret_group = pygame.sprite.Group()
 
-
-
-#create buttons
-turret_button = Button(const.SCREEN_WIDTH + 30, 120, buy_turret_image, True)
-cancel_button = Button(const.SCREEN_WIDTH + 50, 180, cancel_image, True)
-start_button = Button(const.SCREEN_WIDTH + 30, 0, start_button_image, True)
-restart_button = Button(const.SCREEN_WIDTH + 30, 0, restart_button_image, True)
-
-
 game_started = False
 restart_button_visible = False
-
-
-level_name = "level_1"
-test_level = load_level_config(level_name)
-
-current_level = copy.deepcopy(test_level)
-
-level_render = LevelRender()
-
-set_starting_gold(current_level)
 
 enemy_manager = EnemyManager(current_level, enemy_images, world.waypoints)
 
