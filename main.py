@@ -22,7 +22,7 @@ placing_turrets = False
 selected_turret = None
 
 #load imgs
-enemy_image = pygame.image.load("graphics/snail1.png").convert_alpha()
+enemy_image = pygame.image.load("graphics/player_stand.png").convert_alpha()
 #load images
 #map
 map_image = pygame.image.load('graphicsNew/testMap.png')
