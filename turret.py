@@ -47,7 +47,6 @@ class Turret(pg.sprite.Sprite):
         self.current_angle = 0
         self.is_aligned = False
 
-
 #put other functions as private in other language, each function that start with _
     def load_images(self):
         #extract img from sprite sheet
@@ -60,12 +59,12 @@ class Turret(pg.sprite.Sprite):
 
     def precompute_rotated_images(self):
         rotated_images = {}
-        for angle in range(0, 360, 15): #pick at chunks of 15 degrees
+        for angle in range(0, 360, 30): #pick at chunks of 15 degrees
             rotated_images[angle] = [pg.transform.rotate(img, angle) for img in self.animation_list]
         return rotated_images
 
     def get_rotated_image(self, angle, frame_index):
-        nearest_angle = int(round(angle / 15) * 15) % 360
+        nearest_angle = int(round(angle / 30) * 30) % 360
         image = self.rotated_images[nearest_angle][frame_index]
         return image
 
@@ -78,19 +77,21 @@ class Turret(pg.sprite.Sprite):
         for enemy in enemy_group:
             if self.in_range(enemy):
                 closest_enemy = enemy
-                dx, dy = enemy.pos.x - self.pos.x, enemy.pos.y - self.pos.y
-                angle_to_enemy = math.degrees(math.atan2(-dy, dx))
+                direction = closest_enemy.pos - self.pos
+                initial_angle_offset = 90
+                angle_to_enemy = math.degrees(math.atan2(-direction[1], direction[0])) - initial_angle_offset
+                #angle_to_enemy = -30
 
                 break # Exit after the first enemy found in range
 
         if closest_enemy:
-            target_enemy_angle = int(round(angle_to_enemy / 15) * 15) % 360
+            target_enemy_angle = int(round(angle_to_enemy / 30) * 30) % 360
             self.align_to_target_angle(target_enemy_angle)
 
             if self.is_aligned \
                     and (pg.time.get_ticks() - self.last_shot) > self.cooldown:
                 self.attack(closest_enemy)
-                self.play_animation(angle_to_enemy)
+                self.play_animation()
 
         else:
             self.reset_animation()
@@ -98,16 +99,13 @@ class Turret(pg.sprite.Sprite):
 
     def align_to_target_angle(self, target_enemy_angle):
 
-        self.current_angle = target_enemy_angle
         self.is_aligned = True
-
-        self.image = self.get_rotated_image(self.current_angle, self.frame_index)
-
+        self.image = self.get_rotated_image(target_enemy_angle, self.frame_index)
 
 
-    def play_animation(self, angle_to_enemy):
 
-        self.image = self.get_rotated_image(angle_to_enemy, self.frame_index)
+    def play_animation(self):
+
         if pg.time.get_ticks() - self.update_time <= c.ANIMATION_DELAY:
             return
 
