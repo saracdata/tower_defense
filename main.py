@@ -11,7 +11,7 @@ from pygame.math import Vector2
 pygame.init()
 
 #create game window
-screen = pygame.display.set_mode((const.SCREEN_WIDTH + const.SIDE_PANEL,const.SCREEN_HEIGHT))
+screen = pygame.display.set_mode((const.SCREEN_WIDTH + const.SIDE_PANEL, const.SCREEN_HEIGHT))
 pygame.display.set_caption("Tower Defense")
 
 #create clock
@@ -89,6 +89,8 @@ cancel_button = Button(const.SCREEN_WIDTH + 50, 180, cancel_image, True)
 start_button = Button(const.SCREEN_WIDTH + 30, 0, start_button_image, True)
 restart_button = Button(const.SCREEN_WIDTH + 30, 0, restart_button_image, True)
 
+
+
 game_started = False
 restart_button_visible = False
 
@@ -117,6 +119,7 @@ while run:
     if game_started:
         enemy_group.update()
     turret_group.update(game_started, enemy_group)
+
 
     #highlight selected turret
     if selected_turret:
@@ -177,7 +180,7 @@ while run:
         if event.type == pygame.QUIT:
             run = False
         #mouse click
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button ==1:
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             mouse_pos = pygame.mouse.get_pos()
             #check if mouse is on the game area
             if mouse_pos[0] < constants.SCREEN_WIDTH and mouse_pos[1] < constants.SCREEN_HEIGHT:
