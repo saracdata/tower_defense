@@ -175,7 +175,7 @@ while run:
     #draw level
     world.draw(screen)
 
-    level_render.render_level(test_level, screen)
+    level_render.render_level(test_level, level_state, screen)
 
     if not game_started:
         if start_button.draw(screen):
