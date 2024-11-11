@@ -9,7 +9,9 @@ from button import Button
 from pygame.math import Vector2
 from design import GameLevel, EnemyType, TurretType, MapSource, ExtraEffectType
 from level_renderer import LevelRender
-from level_state import LevelState
+from level_state_global import *
+import copy
+from game_level_config_load import load_level_config
 
 pygame.init()
 
@@ -56,7 +58,7 @@ def create_turret(mouse_pos):
     new_turret = Turret(turret_sheet, mouse_tile_x, mouse_tile_y, Vector2(mouse_pos[0], mouse_pos[1]))
 
     #check if that tile is grass
-    if world.tile_map[mouse_tile_num] == 10 and level_state.can_afford(new_turret.cost):
+    if world.tile_map[mouse_tile_num] == 10 and can_afford(new_turret.cost):
         #check that there isn't already a turret there
         space_is_free = True
         for turret in turret_group:
@@ -65,7 +67,7 @@ def create_turret(mouse_pos):
         #if it is a free space then create turret
         if space_is_free == True:
             turret_group.add(new_turret)
-            level_state.deduct_gold(new_turret.cost)
+            deduct_gold(new_turret.cost, current_level)
 
 def select_turret(mouse_pos): #not a pure function, because it depends on turret_group
     mouse_tile_x = mouse_pos[0] // const.Tile_size
@@ -129,17 +131,12 @@ test_level = GameLevel(
 
 )
 
-level_state = LevelState(test_level.gold_balance)
-
-#level_render = LevelRender(test_level)
+current_level = copy.deepcopy(test_level)
 
 level_render = LevelRender()
 
-# dont_have_class_use_dict = {'num1': 1, 'num2': level_render.render_level}
-# dont_have_class_use_dict.copy(13,)
+set_starting_gold(current_level)
 
-
-#serialization and de-serialization .py -> .json, put configurable things that enables it to be good for reshuffling
 
 
 #game loop
@@ -169,13 +166,13 @@ while run:
 
     # DRAWING SECTION
     #############################
-
     screen.fill("grey100")
 
-    #draw level
+    # draw level
     world.draw(screen)
 
-    level_render.render_level(test_level, level_state, screen)
+
+    level_render.render_level(current_level, screen)
 
     if not game_started:
         if start_button.draw(screen):
