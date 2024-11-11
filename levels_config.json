@@ -1,0 +1,24 @@
+{
+  "level_1": {
+    "level_label": "Level 1",
+    "gold_balance": 1000,
+    "enemies": {
+      "RED": 2,
+      "BLUE": 1
+    },
+    "turrets": ["RED", "BLUE"],
+    "map_source": "graphicsNew/testMap.png",
+    "extra_effects": ["EARTHQUAKE", "TSUNAMI"]
+  },
+  "level_2": {
+    "level_label": "Level 2",
+    "gold_balance": 1500,
+    "enemies": {
+      "RED": 3,
+      "BLUE": 2
+    },
+    "turrets": ["RED", "BLUE"],
+    "map_source": "graphicsNew/level2Map.png",
+    "extra_effects": ["TSUNAMI"]
+  }
+}

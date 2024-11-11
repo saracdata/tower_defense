@@ -106,23 +106,8 @@ def restart_round(): #void function, declare inside function, it is local variab
 
 #enemy_group = restart_round(enemy_groupfunction(world.waypoints,enemy_image))
 
-test_level = GameLevel(
-    "level_1",
-    1000,
-    {
-        EnemyType.RED: 2,
-        EnemyType.BLUE: 1,
-
-     },
-    [
-        TurretType.RED,
-        TurretType.BLUE,
-
-    ],
-    MapSource('graphicsNew/testMap.png'),
-    [ExtraEffectType.EARTHQUAKE, ExtraEffectType.TSUNAMI],
-
-)
+level_name = "level_1"
+test_level = load_level_config(level_name)
 
 current_level = copy.deepcopy(test_level)
 
