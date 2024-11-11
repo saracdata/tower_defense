@@ -6,8 +6,8 @@ class LevelState:
         return self.current_gold_balance >= turret_cost
 
     def deduct_gold(self, turret_cost):
+
         if self.can_afford(turret_cost):
             self.current_gold_balance -= turret_cost
-            return True
-        return False
+
 
