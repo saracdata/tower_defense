@@ -49,9 +49,7 @@ cancel_button = Button(const.SCREEN_WIDTH + 50, 180, cancel_image, True)
 start_button = Button(const.SCREEN_WIDTH + 30, 0, start_button_image, True)
 restart_button = Button(const.SCREEN_WIDTH + 30, 0, restart_button_image, True)
 
-#load json data for level
-with open('graphicsNew/testMap.tmj') as file:
-    world_data = json.load(file)
+
 
 level_name = "level_1"
 
@@ -63,6 +61,12 @@ level_render = LevelRender()
 
 set_starting_gold(current_level)
 
+map_file_path = current_level.map.filename
+
+
+#load json data for level
+with open(map_file_path) as file:
+    world_data = json.load(file)
 
 def create_turret(mouse_pos):
     mouse_tile_x = mouse_pos[0] // const.Tile_size

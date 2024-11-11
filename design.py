@@ -50,13 +50,13 @@ class GameLevel:
     extra_effect: List[ExtraEffectType]
 
     def __init__(self, level_label: str, gold_balance: int, enemy_type_to_count: Dict[EnemyType, int],
-                 turret_type_list: List[TurretType], map: MapSource, extra_effect: List[ExtraEffectType]):
+                 turret_type_list: List[TurretType], map_source: MapSource, extra_effect: List[ExtraEffectType]):
 
         self.level_label = level_label
         self.gold_balance = gold_balance
         self.enemy_type_to_count = enemy_type_to_count
         self.turret_type_list = turret_type_list
-        self.map = map
+        self.map = map_source
         self.extra_effect = extra_effect
 
 
