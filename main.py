@@ -1,8 +1,6 @@
 import pygame
 import json
-import constants
 import constants as const
-from enemy import Enemy
 from world import World
 from turret import Turret
 from button import Button
@@ -192,7 +190,7 @@ while run:
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             mouse_pos = pygame.mouse.get_pos()
             #check if mouse is on the game area
-            if mouse_pos[0] < constants.SCREEN_WIDTH and mouse_pos[1] < constants.SCREEN_HEIGHT:
+            if mouse_pos[0] < const.SCREEN_WIDTH and mouse_pos[1] < const.SCREEN_HEIGHT:
                 #Clear selection
                 selected_turret = None
                 clear_selection()
