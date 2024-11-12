@@ -135,6 +135,12 @@ class Turret(pg.sprite.Sprite):
         distance = self.pos.distance_to(enemy.pos)
         return distance <= self.range
 
+    def select(self):
+        self.selected = True
+
+    def deselect(self):
+        self.selected = False
+
 
 
 

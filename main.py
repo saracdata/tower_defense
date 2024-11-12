@@ -11,6 +11,7 @@ from level_state_global import *
 import copy
 from game_level_config_load import load_level_config
 from enemy_manager import EnemyManager
+from turret_manager import TurretManager
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
@@ -69,37 +70,6 @@ world.process_data()
 
 print(world.waypoints)
 
-def create_turret(mouse_pos):
-    mouse_tile_x = mouse_pos[0] // const.Tile_size
-    mouse_tile_y = mouse_pos[1] // const.Tile_size
-    #calculate the sequential number of the tile
-    mouse_tile_num = (mouse_tile_y * const.Cols) + mouse_tile_x
-
-    new_turret = Turret(turret_sheet, mouse_tile_x, mouse_tile_y, Vector2(mouse_pos[0], mouse_pos[1]))
-
-    #check if that tile is grass
-    if world.tile_map[mouse_tile_num] == 10 and can_afford(new_turret.cost):
-        #check that there isn't already a turret there
-        space_is_free = True
-        for turret in turret_group:
-            if (mouse_tile_x, mouse_tile_y) == (turret.tile_x, turret.tile_y):
-                space_is_free = False
-        #if it is a free space then create turret
-        if space_is_free == True:
-            turret_group.add(new_turret)
-            deduct_gold(new_turret.cost, current_level)
-
-def select_turret(mouse_pos): #not a pure function, because it depends on turret_group
-    mouse_tile_x = mouse_pos[0] // const.Tile_size
-    mouse_tile_y = mouse_pos[1] // const.Tile_size
-    for turret in turret_group:
-        if (mouse_tile_x, mouse_tile_y) == (turret.tile_x, turret.tile_y):
-            return turret
-
-def clear_selection():
-    for turret in turret_group:
-        turret.selected = False
-
 
 #create groups
 enemy_group = pygame.sprite.Group()
@@ -109,6 +79,7 @@ game_started = False
 restart_button_visible = False
 
 enemy_manager = EnemyManager(current_level, enemy_images, world.waypoints)
+turret_manager = TurretManager(world, turret_group, current_level.gold_balance, enemy_manager.enemy_group)
 
 #game loop
 run = True
@@ -122,27 +93,13 @@ while run:
     if game_started:
         enemy_manager.update_enemies()
 
-    turret_group.update(game_started, enemy_manager.enemy_group)
-
-
-    #highlight selected turret
-    if selected_turret:
-        selected_turret.selected = True
-
-
-    for turret in turret_group:
-        for enemy in enemy_manager.enemy_group:
-            if turret.in_range(enemy):
-                turret.attack(enemy)
-                print(f"Enemy HP: {enemy.hp}")
+    turret_manager.update(game_started)
 
     # DRAWING SECTION
     #############################
     screen.fill("grey100")
-
     # draw level
     world.draw(screen)
-
 
     level_render.render_level(current_level, screen)
 
@@ -159,8 +116,7 @@ while run:
     if game_started:
         enemy_manager.draw_enemies(screen)
 
-    for turret in turret_group:
-        turret.draw(screen)
+    turret_manager.draw(screen)
 
     #draw buttons
     #button for placing turrets
@@ -188,13 +144,19 @@ while run:
             mouse_pos = pygame.mouse.get_pos()
             #check if mouse is on the game area
             if mouse_pos[0] < const.SCREEN_WIDTH and mouse_pos[1] < const.SCREEN_HEIGHT:
-                #Clear selection
                 selected_turret = None
-                clear_selection()
-                if placing_turrets == True:
-                    create_turret(mouse_pos)
+                turret_manager.clear_selection()  # Deselect any previously selected turret
+
+                if placing_turrets:
+                    # Create a new turret if placing turrets
+                    turret_manager.create_turret(mouse_pos, turret_sheet)
+                    current_level.set_balance(turret_manager.gold_balance)
+
                 else:
-                    selected_turret = select_turret(mouse_pos)
+                    # Select a turret if not placing
+                    selected_turret = turret_manager.select_turret(mouse_pos)
+                    if selected_turret:
+                        selected_turret.select()
 
     #update display
     pygame.display.flip()

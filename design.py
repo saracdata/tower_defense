@@ -96,5 +96,8 @@ class GameLevel:
         self.map = map_source
         self.extra_effect = extra_effect
 
+    def set_balance(self, balance: int):
+        self.gold_balance = balance
+
 
 
