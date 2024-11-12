@@ -11,7 +11,6 @@ class TurretManager:
         self.gold_balance = gold_balance
         self.enemy_group = enemy_group
 
-
     def create_turret(self, mouse_pos, turret_sheet):
         mouse_tile_x = mouse_pos[0] // const.Tile_size
         mouse_tile_y = mouse_pos[1] // const.Tile_size
@@ -21,8 +20,10 @@ class TurretManager:
 
         # Check if tile is grass and if the player can afford the turret
         if self.world.tile_map[mouse_tile_num] == 10 and self.can_afford(new_turret.cost):
+
             # Check if there's already a turret on the tile
             if self.is_tile_free(mouse_tile_x, mouse_tile_y):
+
                 self.turret_group.add(new_turret)
                 self.deduct_gold(new_turret.cost)
 
